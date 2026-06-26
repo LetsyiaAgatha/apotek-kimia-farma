@@ -1,46 +1,33 @@
 <?php
 /**
- * Database Configuration
+ * Database Configuration (Production Hosting only)
  * Apotek Kimia Farma — Backend API
  */
 
-// Auto-detect local vs hosting environment
-$isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1']) 
-    || (isset($_SERVER['SERVER_ADDR']) && in_array($_SERVER['SERVER_ADDR'], ['127.0.0.1', '::1']));
+$host = "localhost";
+$user = "mypq3134_admin";
+$pass = "Agatha123456";
+$db   = "mypq3134_apotek";
 
-if ($isLocal) {
-    $host = "127.0.0.1";
-    $user = "root";
-    $pass = "";               // Kosong = default XAMPP
-    $db   = "apotek_kimia_farma";
-    define('UPLOAD_URL', '/apotek/uploads/');
-} else {
-    // Database credentials for hosting
-    $host = "localhost";      // Hosting database host (usually localhost)
-    $user = "mypq3134_admin"; // Hosting database user
-    $pass = "Agatha123456";    // Hosting database password
-    $db   = "mypq3134_apotek";  // Hosting database name
-    
-    // Auto-detect root vs subfolder for hosting UPLOAD_URL
-    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-    $baseDir = preg_replace('/\/api$/', '', $scriptDir);
-    $baseDir = rtrim($baseDir, '/');
-    define('UPLOAD_URL', $baseDir . '/uploads/');
-}
-
-// Koneksi MySQLi (seperti contoh yang diminta)
+// Koneksi MySQLi
 $conn = mysqli_connect($host, $user, $pass, $db);
 if (!$conn) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
-// Koneksi PDO (tetap dipertahankan di bawah hood agar api/state.php tidak crash)
+// Koneksi PDO (untuk mendukung api/state.php)
 define('DB_HOST', $host);
 define('DB_USER', $user);
 define('DB_PASS', $pass);
 define('DB_NAME', $db);
 define('DB_PORT', 3306);
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+
+// Auto-detect root vs subfolder for hosting upload URL
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+$baseDir = preg_replace('/\/api$/', '', $scriptDir);
+$baseDir = rtrim($baseDir, '/');
+define('UPLOAD_URL', $baseDir . '/uploads/');
 
 // Connect to MySQL
 function getDB(): PDO
