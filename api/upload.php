@@ -30,13 +30,13 @@ if ($file['size'] > 5 * 1024 * 1024) {
 }
 
 // Generate nama file unik
-$ext      = match($mimeType) {
+$extMap = [
     'image/jpeg' => 'jpg',
     'image/png'  => 'png',
     'image/gif'  => 'gif',
     'image/webp' => 'webp',
-    default      => 'jpg',
-};
+];
+$ext = $extMap[$mimeType] ?? 'jpg';
 $filename = 'prod_' . uniqid('', true) . '.' . $ext;
 $destPath = UPLOAD_DIR . $filename;
 
