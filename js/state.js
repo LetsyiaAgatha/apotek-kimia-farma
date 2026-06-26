@@ -29,7 +29,7 @@ export const state = {
 // ─────────────────────────────────────────────
 export const loadState = async () => {
     try {
-        const res  = await fetch('/apotek/api/state.php');
+        const res  = await fetch('api/state.php');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 
@@ -56,7 +56,7 @@ export const loadState = async () => {
 // ─────────────────────────────────────────────
 export const saveState = async () => {
     try {
-        await fetch('/apotek/api/state.php', {
+        await fetch('api/state.php', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({
@@ -87,7 +87,7 @@ export const uploadPhoto = async (file) => {
     try {
         const formData = new FormData();
         formData.append('photo', file);
-        const res  = await fetch('/apotek/api/upload.php', { method: 'POST', body: formData });
+        const res  = await fetch('api/upload.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) return data.url;
         console.error('[Upload] Server error:', data.error);
