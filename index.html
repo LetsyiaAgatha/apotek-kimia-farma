@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimia Farma - Integrated System</title>
+    <link rel="stylesheet" href="styles.css?v=1.0.3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Login Screen Overlay -->
+    <div id="login-container" class="login-overlay-full hidden"></div>
+
+    <div id="app" class="app-container">
+        <!-- Sidebar Overlay -->
+        <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close sidebar">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="sidebar-header">
+                <img src="img/logo.png" alt="Kimia Farma Logo" class="app-logo">
+                <h1 class="app-name">Apotek Kimia Farma</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#pos" class="nav-item" data-page="pos">
+                    <i data-lucide="shopping-cart"></i>
+                    <span>POS Transaksi</span>
+                </a>
+                <a href="#warehouse" class="nav-item" data-page="warehouse">
+                    <i data-lucide="package"></i>
+                    <span>Gudang</span>
+                </a>
+                <a href="#consignment" class="nav-item" data-page="consignment">
+                    <i data-lucide="truck"></i>
+                    <span>Konsinyasi</span>
+                </a>
+                <a href="#purchase_order" class="nav-item" data-page="purchase_order">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Pengadaan PO (Titip)</span>
+                </a>
+                <a href="#procurement" class="nav-item" data-page="procurement">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Pengadaan Obat (Beli Putus)</span>
+                </a>
+                <a href="#reports" class="nav-item" data-page="reports">
+                    <i data-lucide="file-text"></i>
+                    <span>Laporan</span>
+                </a>
+                <a href="#users" class="nav-item" data-page="users">
+                    <i data-lucide="shield-check"></i>
+                    <span>Hak Akses User</span>
+                </a>
+                <a href="#notifications" class="nav-item" data-page="notifications">
+                    <i data-lucide="bell"></i>
+                    <span>Notifikasi</span>
+                    <span class="badge-pill" id="sidebar-notif-badge" style="display: none; margin-left: auto;">0</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="user-profile" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 4px;">
+                    <div class="user-avatar" id="footer-avatar">AD</div>
+                    <div class="user-info">
+                        <span class="user-name" id="footer-name">Admin</span>
+                        <span class="user-role" id="footer-role">Administrator</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="window.logoutUser()" style="width: 100%; display: flex; align-items: center; gap: 10px; color: #f43f5e; background: rgba(244, 63, 94, 0.05); border: 1px solid rgba(244, 63, 94, 0.15); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; justify-content: center; font-family: inherit;">
+                    <i data-lucide="log-out" style="width: 14px; height: 14px;"></i>
+                    <span>Keluar dari Sistem</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-navbar">
+                <button class="mobile-toggle-btn" id="mobile-toggle" aria-label="Open sidebar">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="page-title">
+                    <h2 id="current-page-title">Dashboard</h2>
+                </div>
+                <div class="navbar-actions">
+                    <div class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Cari data..." oninput="handleGlobalSearch(event)">
+                    </div>
+                    <button class="icon-btn" onclick="showNotifications()">
+                        <i data-lucide="bell"></i>
+                        <span class="badge" id="notif-badge">0</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i data-lucide="settings"></i>
+                    </button>
+                </div>
+            </header>
+            <!-- Print Header (Hanya muncul saat cetak laporan) -->
+            <div class="print-header no-screen" style="display: none;">
+                <div style="text-align: center; border-bottom: 2px solid #1e293b; padding-bottom: 12px; margin-bottom: 24px;">
+                    <h1 style="font-size: 2rem; margin: 0 0 4px 0; font-family: 'Outfit', sans-serif; color: #1e293b; font-weight: 800;">APOTEK KIMIA FARMA</h1>
+                    <p style="font-size: 0.95rem; margin: 0 0 8px 0; color: #475569; font-weight: 500;">Laporan Operasional & Keuangan Resmi</p>
+                    <div style="display: flex; justify-content: center; gap: 20px; font-size: 0.8rem; color: #64748b; flex-wrap: wrap;">
+                        <span>Periode Laporan: <strong id="print-period">-</strong></span>
+                        <span>Dicetak oleh: <strong id="print-user">-</strong></span>
+                        <span>Tanggal Cetak: <strong id="print-date">-</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <section id="content-area" class="content-area">
+                <!-- Pages will be rendered here -->
+                <div class="loader">Memuat...</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-container" class="modal-overlay hidden">
+        <div class="modal-content">
+            <!-- Modal content injected here -->
+        </div>
+    </div>
+
+    <script>
+        // Emergency Debugger
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Global Error:', msg, 'at', lineNo);
+            const content = document.getElementById('content-area');
+            if (content) {
+                content.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #991b1b; background: #fee2e2; border-radius: 12px; margin: 20px;">
+                        <h3>Sistem Gagal Memuat (Error)</h3>
+                        <p style="font-size: 0.9rem;">${msg}</p>
+                        <button onclick="localStorage.clear(); location.href=location.pathname;" style="padding: 10px 20px; background: #e11d48; color: white; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px;">Reset Total Sekarang</button>
+                    </div>
+                `;
+            }
+            return false;
+        };
+    </script>
+    <script type="module" src="app.js?v=1.1.2"></script>
+</body>
+</html>
