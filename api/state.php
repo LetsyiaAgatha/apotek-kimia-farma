@@ -4,6 +4,10 @@
  * GET  /api/state.php  → Kembalikan semua data dari DB
  * POST /api/state.php  → Simpan seluruh state ke DB
  */
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
