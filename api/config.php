@@ -9,29 +9,38 @@ $isLocal = in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost', '127.0.0.1'])
     || (isset($_SERVER['SERVER_ADDR']) && in_array($_SERVER['SERVER_ADDR'], ['127.0.0.1', '::1']));
 
 if ($isLocal) {
-    define('DB_HOST', '127.0.0.1');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');               // Kosong = default XAMPP
-    define('DB_NAME', 'apotek_kimia_farma');
-    define('DB_PORT', 3306);
+    $host = "127.0.0.1";
+    $user = "root";
+    $pass = "";               // Kosong = default XAMPP
+    $db   = "apotek_kimia_farma";
     define('UPLOAD_URL', '/apotek/uploads/');
 } else {
     // Database credentials for hosting
-    define('DB_HOST', 'localhost');      // Hosting database host (usually localhost)
-    define('DB_USER', 'mypq3134_admin'); // Hosting database user
-    define('DB_PASS', 'Agatha123456');    // Hosting database password
-    define('DB_NAME', 'mypq3134_apotek');  // Hosting database name
-    define('DB_PORT', 3306);
+    $host = "localhost";      // Hosting database host (usually localhost)
+    $user = "mypq3134_admin"; // Hosting database user
+    $pass = "Agatha123456";    // Hosting database password
+    $db   = "mypq3134_apotek";  // Hosting database name
     
-    // Auto-detect root vs subfolder for hosting upload URL
+    // Auto-detect root vs subfolder for hosting UPLOAD_URL
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
     $baseDir = preg_replace('/\/api$/', '', $scriptDir);
     $baseDir = rtrim($baseDir, '/');
     define('UPLOAD_URL', $baseDir . '/uploads/');
 }
 
-define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+// Koneksi MySQLi (seperti contoh yang diminta)
+$conn = mysqli_connect($host, $user, $pass, $db);
+if (!$conn) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
+}
 
+// Koneksi PDO (tetap dipertahankan di bawah hood agar api/state.php tidak crash)
+define('DB_HOST', $host);
+define('DB_USER', $user);
+define('DB_PASS', $pass);
+define('DB_NAME', $db);
+define('DB_PORT', 3306);
+define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 
 // Connect to MySQL
 function getDB(): PDO
