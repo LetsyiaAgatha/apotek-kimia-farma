@@ -4,22 +4,22 @@
  */
 
 // Import Core
-import { loadState, state } from './js/state.js';
-import './js/utils.js';
-import { navigate, updateActiveLink, renderPage } from './js/router.js';
+import { loadState, state } from './js/state.js?v=1.1.2';
+import './js/utils.js?v=1.1.2';
+import { navigate, updateActiveLink, renderPage } from './js/router.js?v=1.1.2';
 
 // Import Modules (to register them)
-import './js/modules/notifications.js';
-import { updateNotificationBadge } from './js/modules/notifications.js';
-import './js/modules/dashboard.js';
-import './js/modules/pos.js';
-import './js/modules/warehouse.js';
-import './js/modules/consignment.js';
-import './js/modules/reports.js';
-import './js/modules/users.js';
-import { updateSidebarProfile } from './js/modules/users.js';
-import './js/modules/purchase_order.js';
-import './js/modules/procurement.js';
+import './js/modules/notifications.js?v=1.1.2';
+import { updateNotificationBadge } from './js/modules/notifications.js?v=1.1.2';
+import './js/modules/dashboard.js?v=1.1.2';
+import './js/modules/pos.js?v=1.1.2';
+import './js/modules/warehouse.js?v=1.1.2';
+import './js/modules/consignment.js?v=1.1.2';
+import './js/modules/reports.js?v=1.1.2';
+import './js/modules/users.js?v=1.1.2';
+import { updateSidebarProfile } from './js/modules/users.js?v=1.1.2';
+import './js/modules/purchase_order.js?v=1.1.2';
+import './js/modules/procurement.js?v=1.1.2';
 
 // Global Search functionality
 window.handleGlobalSearch = (e) => {
